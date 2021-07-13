@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+	<Properties>
+		<Property name="baseLogDir">logs</Property>
+	</Properties>
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %c{1}:%L - %m%n" />
+		</Console>
+		<!-- Appender for auditlog.log -->
+		<RollingFile name="WMSRollingFile"
+			fileName="logs/wmslog.log"
+			filePattern="logs/wmslog-%d{yyyy-MM-dd}.log.%i">
+			<PatternLayout>
+				<pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %c{1}:%L - %m%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="100MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="60"
+				fileIndex="min">
+				<Delete basePath="${baseLogDir}">
+					<IfFileName glob="wmslog-*.log.*">
+						<IfLastModified age="60d" />
+					</IfFileName>
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>
+		<!-- Root Logger -->
+		<Root level="info">
+			<AppenderRef ref="WMSRollingFile" level="info" />
+			<!-- <AppenderRef ref="Console" level="info" /> -->
+		</Root>
+	</Loggers>
+</Configuration>
